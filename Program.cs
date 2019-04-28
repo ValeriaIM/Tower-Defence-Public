@@ -79,7 +79,19 @@ namespace ConsoleApp4
             }
             catch (IndexOutOfRangeException e)
             {
-                Console.WriteLine("{0} First exception caught.", e);
+                Console.WriteLine("{0} exception with array of enemy caught.", e);
+            }
+            
+            try
+            {            
+                QuantityEnemy1 = quantityEnemy[0];
+                QuantityEnemy2 = quantityEnemy[1];
+                QuantityEnemy3 = quantityEnemy[2];
+                QuantityEnemy4 = quantityEnemy[3];
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine("{0} exception with array of quantityEnemy caught.", e);
             }
         }
     }
