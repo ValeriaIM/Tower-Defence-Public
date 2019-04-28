@@ -16,6 +16,7 @@ namespace ConsoleApp4
 
     public class Tower
     {
+        private int Price = 100;
         public readonly int Damage;
         public readonly int DamageRadius;
         public readonly Point Position;
@@ -25,6 +26,7 @@ namespace ConsoleApp4
             Damage = damage;
             DamageRadius = squre;
             Position = new Point(x, y);
+            Player.Purse -= Price;
         }
     }
 
@@ -45,6 +47,7 @@ namespace ConsoleApp4
         private int Damage;
         private int Speed;
         private int HP;
+        private int Value = 50; // после убийства игрок получает это количество
 
         public void ReduceHP(int damage)
         {
@@ -54,6 +57,11 @@ namespace ConsoleApp4
         public void ReduceSpeed(int speed)
         {
             Speed -= speed;
+        }
+        
+        public void DeadEnemy()
+        {
+            Player.Purse += Value;
         }
     }
 
