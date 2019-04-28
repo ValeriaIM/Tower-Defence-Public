@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -28,6 +28,11 @@ namespace ConsoleApp4
             Position = new Point(x, y);
             Player.Purse -= Price;
         }
+        
+        public void DeleteTower()
+        {
+            Player.Purse += Price;// прекратить показывать картинку и прочее !!
+        }
     }
 
     public class Point
@@ -47,11 +52,13 @@ namespace ConsoleApp4
         private int Damage;
         private int Speed;
         private int HP;
-        private int Value = 50; // после убийства игрок получает это количество
+        private int Value = 50; // после убийства игрок получает это количество(сделано)
 
         public void ReduceHP(int damage)
         {
             HP -= damage;
+            if (HP == 0)
+                DeadEnemy();            
         }
 
         public void ReduceSpeed(int speed)
@@ -61,7 +68,7 @@ namespace ConsoleApp4
         
         public void DeadEnemy()
         {
-            Player.Purse += Value;
+            Player.Purse += Value; // прекратить показывать и прочее!!!
         }
     }
 
