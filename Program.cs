@@ -68,11 +68,19 @@ namespace ConsoleApp4
         public readonly Enemy Enemy4;
         public readonly int QuantityEnemy4;
 
-        public Wave(int damage, int squre, int x, int y)
+        public Wave(Enemy[] enemy, int[] quantityEnemy)
         {
-            Damage = damage;
-            DamageRadius = squre;
-            Position = new Point(x, y);
+            try
+            {            
+                Enemy1 = enemy[0];
+                Enemy2 = enemy[1];
+                Enemy3 = enemy[2];
+                Enemy4 = enemy[3];
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Console.WriteLine("{0} First exception caught.", e);
+            }
         }
     }
     
