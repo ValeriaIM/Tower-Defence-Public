@@ -11,7 +11,7 @@ namespace Tower_Defence
         static void Main(string[] args)
         {
             var way = GetWay(AddressWay1); // потом можно создать файл со списком адресов распол-я карт, и в зависимости от ур-ня выбирать нужную карту
-            var map = new Map(20, 20, 500, way);
+            var map = new Map(20, 2, 500, way);
             var pl = new Player(300);
             int level = 1;
             Console.WriteLine("                   Добро пожаловать в игру! ");
@@ -29,13 +29,59 @@ namespace Tower_Defence
                 }
                 ProcessingChoice(pl, map, choice);
             }
-            GameMode(map, level);
+            GameMode(map, level, pl);
         }
 
         
-        private static void GameMode(Map map, int level)
+        private static void GameMode(Map map, int level, Player pl)
         {
-            
+            var wave = new Wave(new Enemy[]{new SimpleEnemy()}, new int[]{10}, new Enemy ReinforcedEnemy());            
+            while(pl.HP > 0)
+            {
+                if (wave.QuantityEnemies[0] != 0)
+                    map.EnemiesMap[0,0] = map.Enemies[0];
+                var height = map.EnemiesMap.GetLength(0);
+                var width = map.EnemiesMap.GetLength(1);
+                var step = 0;
+                for (int i = height - 1; i >= 0; i--)
+                {
+                    for (int j = width - 1; j >= 0; j--)
+                    {
+                        if (map.EnemiesMap[i, j] == null)
+                            continue;
+                        step = map.EnemiesMap[i, j].WatchSpeed();
+                        var posi = i;
+                        var posj = j;
+                        while (step != 0)
+                        {
+                            if (map.Way[posi, posj] == '-')
+                            { 
+                                map.EnemiesMap[posi, posj + q] = map.EnemiesMap[posi, posj];
+                                map.EnemiesMap[posi, posj] = null;
+                                posj++;
+                            }
+                            // здесь будут позже другие варианты, как можно ходить
+                            if (map.Way[posi, posj] == 'E')
+                            {
+                                pl.GetDamage(map.Way[posi, posj].WatchDamage());
+                                map.EnemiesMap[posi, posj] = null;
+                            }
+                            step--;
+                        }                        
+                    }
+                } 
+                
+                for (int i = 0; i < height; i++)
+                {
+                    for (int j = 0; j < width; j++)
+                    {
+                        if (map.TowersMap[i, j] == null)
+                            continue;
+                        var radius = map.TowersMap[i, j].WatchRadius();
+                        // тут д.б. повреждение врагов
+                    }
+                } 
+            }
             
         }
         
@@ -240,6 +286,11 @@ namespace Tower_Defence
         {
             HP = hp;
         }
+        
+        public void GetDamage(int damage)
+        {
+            Hp -= damage;
+        }
 
         public void BuildTower(Map map, Tower tower, Point position)
         {
@@ -277,11 +328,13 @@ namespace Tower_Defence
     {
         readonly Enemy[] Enemies;
         readonly int[] QuantityEnemies;
+        readonly Enemy Boss;
 
-        public Wave(Enemy[] enemies, int[] quantityEnemies)
+        public Wave(Enemy[] enemies, int[] quantityEnemies, Enemy boss)
         {
             Enemies = enemies;
             QuantityEnemies = quantityEnemies;
+            Boss = boss;
             if (Enemies.Length != QuantityEnemies.Length)
             {
                 throw new Exception(); //не уверена в правильности
@@ -322,14 +375,32 @@ namespace Tower_Defence
         {
             return Value;
         }
+        
+        public int WatchSpeed()
+        {
+            return Speed;
+        }
+        
+        public int WatchDamage()
+        {
+            return Damage;
+        }
     }
 
     public class SimpleEnemy : Enemy //не уверена в правильности
     {
         int Damage = 100;
-        double Speed = 1.0;
+        double Speed = 2.0;
         int HP = 100;
         int Value = 30;
+    }
+    
+    public class ReinforcedEnemy : Enemy //не уверена в правильности
+    {
+        int Damage = 300;
+        double Speed = 3.0;
+        int HP = 200;
+        int Value = 100;
     }
 
     public class Tower
@@ -341,6 +412,11 @@ namespace Tower_Defence
         public int WatchPrice()
         {
             return Price;
+        }
+        
+        public int WatchRadius()
+        {
+            return DamageRadius;
         }
     }
 
