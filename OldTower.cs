@@ -27,7 +27,10 @@ namespace Tower_Defence
                     choice = Console.ReadLine();
                 }
                 string position = null;
+                string oldpos = null;
+                string newpos = null;
                 Point pos;
+                Point pos2;
                 switch (Int32.Parse(choice))// вынести в отдельный метод потом
                 {
                     case 1:
@@ -36,29 +39,45 @@ namespace Tower_Defence
                         string numberTower = null;
                         while (numberTower == null)
                         {
-                            numberTower = Console.ReadLine(); // надо преобразовать
+                            numberTower = Console.ReadLine(); 
                         }
                         Console.WriteLine("Пожалуйста, напишите координаты через пробел");
                         
                         while (position == null)
                         {
-                            position = Console.ReadLine(); // надо преобразовать
+                            position = Console.ReadLine(); 
                         }
                         pos = new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
                         pl.BuildTower(map, tower, pos);
                         break;
                     case 2:
+                        Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
+                        while (oldpos == null)	
+                        {	
+                            oldpos = Console.ReadLine(); 	
+                        }
+                        pos = new Point(Int32.Parse(oldpos.Split()[0]), Int32.Parse(oldpos.Split()[1]));
+                        Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");	                        	
+                        while (newpos == null)	
+                        {	
+                            newpos = Console.ReadLine(); 	
+                        }
+                        pos2 = new Point(Int32.Parse(newpos.Split()[0]), Int32.Parse(newpos.Split()[1]));
+                        pl.MoveTower(map, pos, pos2);	
+                        break;                        
+                    case 3:
                         Console.WriteLine("Пожалуйста, напишите координаты через пробел");
                         while (position == null)
                         {
-                            position = Console.ReadLine(); // надо преобразовать
+                            position = Console.ReadLine();
                         }
                         pos = new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
                         pl.DeleteTower(map, pos);
-                        break;
-                    case 3:
-                        break;
+                        break;                        
                     case 4:
+                        pl.WatchPowers(map);	
+                        break;
+                    case 5:
                         pl.StartGame(map);
                         break;
                     default:
@@ -180,6 +199,13 @@ namespace Tower_Defence
             if (map.GameMode)
                 return;
             map.InstallTower(tower, position);
+        }
+        
+        public void MoveTower(Map map, Point pos, Point pos2)
+        {
+            if (map.GameMode)
+                return;
+            map.MoveTower(map, pos, pos2)
         }
 
         public void DeleteTower(Map map, Point position)
