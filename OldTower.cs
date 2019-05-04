@@ -26,69 +26,9 @@ namespace Tower_Defence
                 {
                     choice = Console.ReadLine();
                 }
-                string position = null;
-                string oldpos = null;
-                string newpos = null;
-                Point pos;
-                Point pos2;
-                switch (Int32.Parse(choice))// вынести в отдельный метод потом
-                {
-                    case 1:
-                        Console.WriteLine("Пожалуйста, выберите башню: ");
-                        Console.WriteLine("1. SimpleTower. Price = 100, Damage = 30, DamageRadius = 2.");
-                        string numberTower = null;
-                        while (numberTower == null)
-                        {
-                            numberTower = Console.ReadLine(); 
-                        }
-                        Console.WriteLine("Пожалуйста, напишите координаты через пробел");
-                        
-                        while (position == null)
-                        {
-                            position = Console.ReadLine(); 
-                        }
-                        pos = new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
-                        pl.BuildTower(map, tower, pos);
-                        break;
-                    case 2:
-                        Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
-                        while (oldpos == null)	
-                        {	
-                            oldpos = Console.ReadLine(); 	
-                        }
-                        pos = new Point(Int32.Parse(oldpos.Split()[0]), Int32.Parse(oldpos.Split()[1]));
-                        Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");	                        	
-                        while (newpos == null)	
-                        {	
-                            newpos = Console.ReadLine(); 	
-                        }
-                        pos2 = new Point(Int32.Parse(newpos.Split()[0]), Int32.Parse(newpos.Split()[1]));
-                        pl.MoveTower(map, pos, pos2);	
-                        break;                        
-                    case 3:
-                        Console.WriteLine("Пожалуйста, напишите координаты через пробел");
-                        while (position == null)
-                        {
-                            position = Console.ReadLine();
-                        }
-                        pos = new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
-                        pl.DeleteTower(map, pos);
-                        break;                        
-                    case 4:
-                        pl.WatchPowers(map);	
-                        break;
-                    case 5:
-                        pl.StartGame(map);
-                        break;
-                    default:
-                        Console.WriteLine("Default case");
-                        break;
-                }
-
-                // тело цикла
+                ProcessingChoice(pl, map, choice);
             }
             GameMode(map, level);
-            // тело программы
         }
 
         private static void DisplayCommandList()
@@ -100,6 +40,58 @@ namespace Tower_Defence
             Console.WriteLine("4. Начать игру.");
             Console.WriteLine("P.S. Вы не потеряете очков во время редактирования, но на следующем уровне у вас уже не будет этих башен.");
             Console.WriteLine("Будьте внимательны, после начала игры будет невозможно строить новые башни");
+        }
+        
+        private void ProcessingChoice(Player pl, Map map, string choice)
+        {
+            Point pos;
+            Point pos2;
+            switch (Int32.Parse(choice))
+            {
+                case 1:
+                    Console.WriteLine("Пожалуйста, выберите башню: ");
+                    Console.WriteLine("1. SimpleTower. Price = 100, Damage = 30, DamageRadius = 2.");
+                    string numberTower = null;
+                    while (numberTower == null)
+                    {
+                        numberTower = Console.ReadLine(); 
+                    }
+                    Console.WriteLine("Пожалуйста, напишите координаты через пробел");                    
+                    pos = ReceivePoint();
+                    pl.BuildTower(map, tower, pos);
+                    break;
+                case 2:
+                    Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
+                    pos = ReceivePoint();
+                    Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");	                        	
+                    pos2 = ReceivePoint();
+                    pl.MoveTower(map, pos, pos2);	
+                    break;                        
+                case 3:
+                    Console.WriteLine("Пожалуйста, напишите координаты через пробел");
+                    pos = ReceivePoint();
+                    pl.DeleteTower(map, pos);
+                    break;                        
+                case 4:
+                    pl.WatchPowers(map);	
+                    break;
+                case 5:
+                    pl.StartGame(map);
+                    break;
+                default:
+                    Console.WriteLine("Default case");
+                    break;
+            }
+        }
+        
+        private Point ReceivePoint()
+        {
+            string position = null;
+            while (position == null)
+            {
+                position = Console.ReadLine(); 
+            }
+            return new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
         }
 
         private static void GameMode(Map map, int level)
