@@ -10,109 +10,101 @@ namespace Tower_Defence
     {
         static void Main(string[] args)
         {
-            Map map = new Map (20, 20, 500);
-            Player pl = new Player(300);
+            var map = new Map(20, 20, 500);
+            var pl = new Player(300);
             int level = 1;
             Console.WriteLine("                   Добро пожаловать в игру! ");
             Console.WriteLine("Вам необходимо расставить башенки так, чтобы враги вас не убили.");
-            Console.WriteLine($"Ваш уровень - {level}.")
+            Console.WriteLine($"Ваш уровень - {level}.");
             while (!map.GameMode)
             {
                 DisplayCommandList();
                 //нужно сделать опцию просмотра карты у игрока,(не сейчас)можно также сделать уровни сложности (на легком можно троить во время игры)
                 //выход из игры+
-                string choice; 
-                while (choise == null)
+                string choice = null;
+                while (choice == null)
                 {
                     choice = Console.ReadLine();
                 }
+                string position = null;
+                Point pos;
                 switch (Int32.Parse(choice))// вынести в отдельный метод потом
                 {
                     case 1:
                         Console.WriteLine("Пожалуйста, выберите башню: ");
                         Console.WriteLine("1. SimpleTower. Price = 100, Damage = 30, DamageRadius = 2.");
-                        string numberTower; 
+                        string numberTower = null;
                         while (numberTower == null)
                         {
                             numberTower = Console.ReadLine(); // надо преобразовать
                         }
                         Console.WriteLine("Пожалуйста, напишите координаты через пробел");
-                        string position; 
+                        
                         while (position == null)
                         {
                             position = Console.ReadLine(); // надо преобразовать
                         }
-                        pl.BuildTower(map, tower, position);
+                        pos = new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
+                        pl.BuildTower(map, tower, pos);
                         break;
-                    case 2:                        
-                        Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
-                        string oldpos; 
-                        while (oldpos == null)
+                    case 2:
+                        Console.WriteLine("Пожалуйста, напишите координаты через пробел");
+                        while (position == null)
                         {
-                            oldpos = Console.ReadLine(); // надо преобразовать
+                            position = Console.ReadLine(); // надо преобразовать
                         }
-                        Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");
-                        string newpos; 
-                        while (newpos == null)
-                        {
-                            newpos = Console.ReadLine(); // надо преобразовать
-                        }
-                        pl.DeleteTower(map, oldpos, newpos);
+                        pos = new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
+                        pl.DeleteTower(map, pos);
                         break;
                     case 3:
-                        Console.WriteLine("Пожалуйста, напишите координаты через пробел");
-                        string position; 
-                        while (position == null)
-                        {
-                            position = Console.ReadLine(); // надо преобразовать
-                        }
-                        pl.DeleteTower(map, position);
                         break;
                     case 4:
-                        pl.WatchPowers(map);
-                        break;
-                    case 5:
                         pl.StartGame(map);
                         break;
                     default:
                         Console.WriteLine("Default case");
                         break;
                 }
-                
+
                 // тело цикла
             }
             GameMode(map, level);
             // тело программы
         }
-        
-        private void DisplayCommandList()
+
+        private static void DisplayCommandList()
         {
             Console.WriteLine("Пожалуйста, выберите команду: ");
             Console.WriteLine("1. Построить башню.");
-            Console.WriteLine("2. Переместить башню.");
-            Console.WriteLine("3. Удалить башню.");
-            Console.WriteLine("4. Посмотреть очки.");
-            Console.WriteLine("5. Начать игру.");
+            Console.WriteLine("2. Удалить башню.");
+            Console.WriteLine("3. Посмотреть очки.");
+            Console.WriteLine("4. Начать игру.");
             Console.WriteLine("P.S. Вы не потеряете очков во время редактирования, но на следующем уровне у вас уже не будет этих башен.");
             Console.WriteLine("Будьте внимательны, после начала игры будет невозможно строить новые башни");
         }
-        
-        private void GameMode(Map map, int level)
+
+        private static void GameMode(Map map, int level)
         {
-        
+
         }
     }
-    
-    
-    
+
+
+
     public class Map
     {
         readonly Enemy[,] EnemiesMap;
         readonly Tower[,] TowersMap;
         readonly int Height;
         readonly int Width;
-        private bool GameMode = false;
-        private int PowersPlayer;
+        public bool GameMode = false;
+        private int powersPlayer;
+
+        public int PowersPlayer
+        {
+            get { return powersPlayer; }
+            private set { }
+        }
 
         public Map(int width, int height, int powers)
         {
@@ -122,14 +114,14 @@ namespace Tower_Defence
             TowersMap = new Tower[Height, Width];
             PowersPlayer = powers;
         }
-        
+
         public void WatchMapTowers()// только башни
         {
             for (int i = 0; i < TowersMap.GetLength(0); i++)
             {
                 for (int j = 0; j < TowersMap.GetLength(1); j++)
                 {
-                    if (TowersMap[position.X, position.Y] == null)
+                    if (TowersMap[i, j] == null)
                         Console.Write(".");
                     else
                         Console.Write("S"); // S - SimpleTown, (потом)F - FrozenTown or other record
@@ -167,61 +159,44 @@ namespace Tower_Defence
             PowersPlayer += TowersMap[position.X, position.Y].WatchPrice();
             TowersMap[position.X, position.Y] = null;
         }
-        
-        public int WatchPowers()
-        {
-            return PowersPlayer;
-        }
-        
+
         public void StartGame()
         {
-            GameMode = true;            
+            GameMode = true;
         }
     }
 
     public class Player
     {
-        readonly int HP;        
+        readonly int HP;
 
         public Player(int hp)
         {
-            HP = hp;            
+            HP = hp;
         }
-        
+
         public void BuildTower(Map map, Tower tower, Point position)
         {
             if (map.GameMode)
-                return;            
+                return;
             map.InstallTower(tower, position);
         }
-        
-        public void MoveTower(Map map, Point oldPos, Point newPos)
-        {
-            if (map.GameMode)
-                return;            
-            map.MoveTower(oldPos, newPos);
-        }
-        
+
         public void DeleteTower(Map map, Point position)
         {
             if (map.GameMode)
-                return;            
+                return;
             map.RemoveTower(position);
         }
-        
-        public int WatchPowers(Map map)
-        {
-            return map.WatchPowers();
-        }
-        
+
         public void StartGame(Map map)
         {
             map.StartGame();
         }
-        
+
         public void EndGame(Map map) // потом
         {
-        
+
         }
     }
 
@@ -236,8 +211,8 @@ namespace Tower_Defence
             QuantityEnemies = quantityEnemies;
             if (Enemies.Length != QuantityEnemies.Length)
             {
-                throw new LogicalException(); //не уверена в правильности
-            } 
+                throw new Exception(); //не уверена в правильности
+            }
         }
     }
 
@@ -260,30 +235,28 @@ namespace Tower_Defence
         private int HP;
         private int Value;
 
-        public void ReduceHP(Map map, Point pos, int damage)
+        public void ReduceHP(int damage)
         {
             HP -= damage;
-            if (HP <= 0)
-                map.RemoveEnemy(pos)
         }
 
         public void ReduceSpeed(int speed)
         {
             Speed -= speed;
         }
-        
+
         public int WatchValue()
         {
             return Value;
         }
     }
-    
-    public class SimpleEnemy: Enemy //не уверена в правильности
+
+    public class SimpleEnemy : Enemy //не уверена в правильности
     {
-        Damage = 100;
-        Speed = 1.0;
-        HP = 100;
-        Value = 30;
+        int Damage = 100;
+        double Speed = 1.0;
+        int HP = 100;
+        int Value = 30;
     }
 
     public class Tower
@@ -291,17 +264,17 @@ namespace Tower_Defence
         private int Price;
         private int Damage;
         private int DamageRadius;
-        
+
         public int WatchPrice()
         {
             return Price;
         }
     }
-    
-    public class SimpleTower: Tower //не уверена в правильности
+
+    public class SimpleTower : Tower //не уверена в правильности
     {
-        Price = 100;
-        Damage = 30;
-        DamageRadius = 2;
+        int Price = 100;
+        int Damage = 30;
+        int DamageRadius = 2;
     }
 }
