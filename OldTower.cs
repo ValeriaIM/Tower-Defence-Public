@@ -10,7 +10,8 @@ namespace Tower_Defence
     {
         static void Main(string[] args)
         {
-            var map = new Map(20, 20, 500);
+            var way = GetWay(AddressWay1); // потом можно создать файл со списком адресов распол-я карт, и в зависимости от ур-ня выбирать нужную карту
+            var map = new Map(20, 20, 500, way);
             var pl = new Player(300);
             int level = 1;
             Console.WriteLine("                   Добро пожаловать в игру! ");
@@ -31,13 +32,45 @@ namespace Tower_Defence
             GameMode(map, level);
         }
 
+        
+        private static void GameMode(Map map, int level)
+        {
+            
+            
+        }
+        
+        private static string AddressWay1 = @"C:\...\way1.txt"; // тут какой-то путь
+        
+        private string[] GetWay(string address)
+        {
+            try
+            {
+                //считываем построчно
+                var way = new List<string>();
+                using (StreamReader sr = new StreamReader(address, System.Text.Encoding.Default))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        way.Add(line);
+                    }
+                }
+                return way.ToArray();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+            
         private static void DisplayCommandList()
         {
             Console.WriteLine("Пожалуйста, выберите команду: ");
             Console.WriteLine("1. Построить башню.");
-            Console.WriteLine("2. Удалить башню.");
-            Console.WriteLine("3. Посмотреть очки.");
-            Console.WriteLine("4. Начать игру.");
+            Console.WriteLine("2. Перенести башню.");
+            Console.WriteLine("3. Удалить башню.");
+            Console.WriteLine("4. Посмотреть очки.");
+            Console.WriteLine("5. Начать игру.");
             Console.WriteLine("P.S. Вы не потеряете очков во время редактирования, но на следующем уровне у вас уже не будет этих башен.");
             Console.WriteLine("Будьте внимательны, после начала игры будет невозможно строить новые башни");
         }
@@ -93,11 +126,6 @@ namespace Tower_Defence
             }
             return new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
         }
-
-        private static void GameMode(Map map, int level)
-        {
-
-        }
     }
 
 
@@ -105,6 +133,7 @@ namespace Tower_Defence
     public class Map
     {
         readonly Enemy[,] EnemiesMap;
+        readonly char[,] Way;
         readonly Tower[,] TowersMap;
         readonly int Height;
         readonly int Width;
@@ -117,15 +146,26 @@ namespace Tower_Defence
             private set { }
         }
 
-        public Map(int width, int height, int powers)
+        public Map(int width, int height, int powers, string[] way)
         {
             Height = height;
             Width = width;
             EnemiesMap = new Enemy[Height, Width];
+            Way = FillWay(Width, Height, way);            
             TowersMap = new Tower[Height, Width];
             PowersPlayer = powers;
         }
 
+        private char[,] FillWay(int width, int height, string[] way)
+        {
+            var Way = new char[height, width];
+            for (int i = 0; i < height; i++)
+            {
+                Way[i] = way[i].ToCharArray();              
+            }
+            return Way;
+        }
+        
         public void WatchMapTowers()// только башни
         {
             for (int i = 0; i < TowersMap.GetLength(0); i++)
@@ -148,6 +188,11 @@ namespace Tower_Defence
                 Console.WriteLine("Место занято");
                 return;
             }
+            if (Way[position.X, position.Y] != '.')
+            {
+                Console.WriteLine("Это путь врагов, здесь нельзя ставить");
+                return;
+            }
             if (tower.WatchPrice() > PowersPlayer)
             {
                 Console.WriteLine("Денег не хватает");
@@ -159,6 +204,16 @@ namespace Tower_Defence
 
         public void MoveTower(Point oldPos, Point newPos)
         {
+            if (TowersMap[newPos.X, newPos.Y] != null)
+            {
+                Console.WriteLine("Место занято");
+                return;
+            }
+            if (Way[newPos.X, newPos.Y] != '.')
+            {
+                Console.WriteLine("Это путь врагов, здесь нельзя ставить");
+                return;
+            }
             TowersMap[newPos.X, newPos.Y] = TowersMap[oldPos.X, oldPos.Y];
             TowersMap[oldPos.X, oldPos.Y] = null;
         }
