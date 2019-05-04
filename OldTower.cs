@@ -44,7 +44,22 @@ namespace Tower_Defence
                         }
                         pl.BuildTower(map, tower, position);
                         break;
-                    case 2:
+                    case 2:                        
+                        Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
+                        string oldpos; 
+                        while (oldpos == null)
+                        {
+                            oldpos = Console.ReadLine(); // надо преобразовать
+                        }
+                        Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");
+                        string newpos; 
+                        while (newpos == null)
+                        {
+                            newpos = Console.ReadLine(); // надо преобразовать
+                        }
+                        pl.DeleteTower(map, oldpos, newpos);
+                        break;
+                    case 3:
                         Console.WriteLine("Пожалуйста, напишите координаты через пробел");
                         string position; 
                         while (position == null)
@@ -53,10 +68,10 @@ namespace Tower_Defence
                         }
                         pl.DeleteTower(map, position);
                         break;
-                    case 3:
+                    case 4:
                         pl.WatchPowers(map);
                         break;
-                    case 4:
+                    case 5:
                         pl.StartGame(map);
                         break;
                     default:
@@ -74,9 +89,10 @@ namespace Tower_Defence
         {
             Console.WriteLine("Пожалуйста, выберите команду: ");
             Console.WriteLine("1. Построить башню.");
-            Console.WriteLine("2. Удалить башню.");
-            Console.WriteLine("3. Посмотреть очки.");
-            Console.WriteLine("4. Начать игру.");
+            Console.WriteLine("2. Переместить башню.");
+            Console.WriteLine("3. Удалить башню.");
+            Console.WriteLine("4. Посмотреть очки.");
+            Console.WriteLine("5. Начать игру.");
             Console.WriteLine("P.S. Вы не потеряете очков во время редактирования, но на следующем уровне у вас уже не будет этих башен.");
             Console.WriteLine("Будьте внимательны, после начала игры будет невозможно строить новые башни");
         }
@@ -177,6 +193,13 @@ namespace Tower_Defence
             if (map.GameMode)
                 return;            
             map.InstallTower(tower, position);
+        }
+        
+        public void MoveTower(Map map, Point oldPos, Point newPos)
+        {
+            if (map.GameMode)
+                return;            
+            map.MoveTower(oldPos, newPos);
         }
         
         public void DeleteTower(Map map, Point position)
