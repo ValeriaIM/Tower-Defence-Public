@@ -8,11 +8,7 @@ namespace Tower_Defence
 {
     public class Player
     {
-        public int HP
-        {
-            get;
-            private set;
-        }
+        public int HP { get; private set; }
 
         public Player(int hp)
         {
@@ -43,6 +39,11 @@ namespace Tower_Defence
             if (map.GameMode)
                 return;
             map.RemoveTower(position);
+        }
+
+        public void ReduceHP(int damage)
+        {
+            HP -= damage;
         }
 
         public void StartGame(Map map)

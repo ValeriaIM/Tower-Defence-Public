@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,8 @@ namespace Tower_Defence
     public class Map
     {
         public Enemy[,] EnemiesMap { get; private set; }
-        public char[,] Way { get; private set; }
+        public char[,] WayMap { get; private set; }
+        public Point[] Way { get; private set; }
         public Tower[,] TowersMap { get; private set; }
         public int Height { get; private set; }
         public int Width { get; private set; }
@@ -21,7 +23,7 @@ namespace Tower_Defence
             Height = height;
             Width = width;
             EnemiesMap = new Enemy[Height, Width];
-            Way = FillWay(Width, Height, way);
+            WayMap = FillWay(Width, Height, way);
             TowersMap = new Tower[Height, Width];
             PowersPlayer = powers;
         }
@@ -63,7 +65,7 @@ namespace Tower_Defence
                 Console.WriteLine("Место занято");
                 return;
             }
-            if (Way[position.X, position.Y] != '.')
+            if (WayMap[position.X, position.Y] != '.')
             {
                 Console.WriteLine("Это путь врагов, здесь нельзя ставить");
                 return;
@@ -84,7 +86,7 @@ namespace Tower_Defence
                 Console.WriteLine("Место занято");
                 return;
             }
-            if (Way[newPos.X, newPos.Y] != '.')
+            if (WayMap[newPos.X, newPos.Y] != '.')
             {
                 Console.WriteLine("Это путь врагов, здесь нельзя ставить");
                 return;
@@ -104,6 +106,27 @@ namespace Tower_Defence
         public void StartGame()
         {
             GameMode = true;
+        }
+
+        public static string[] GetWay(string path)
+        {
+            var way = File.ReadLines(path);
+            return way.ToArray();
+        }
+
+        public bool InBounds(Point point)
+        {
+            return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
+        }
+
+        public bool InBounds(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
+
+        public void AddPowers(int powers)
+        {
+            PowersPlayer += powers;
         }
     }
 

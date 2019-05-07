@@ -6,13 +6,8 @@ using System.Threading.Tasks;
 
 namespace Tower_Defence
 {
-    public class Wave
+    class TowersShop
     {
-        public Enemy[] Enemies { get; private set; }
-
-        public Wave(Enemy[] enemies)
-        {
-            Enemies = enemies;
-        }
+        public Tower SimpleTower = new Tower("", 100, 30, 2);
     }
 }

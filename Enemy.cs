@@ -10,17 +10,18 @@ namespace Tower_Defence
     {
         public int HP { get; private set; }
         public int Damage { get; private set; }
-        public int Speed { get; private set; }
         public int Value { get; private set; }
+
+        public Enemy(int hp, int damage, int speed, int value)
+        {
+            HP = hp;
+            Damage = damage;
+            Value = value;
+        }
 
         public void ReduceHP(int damage)
         {
             HP -= damage;
-        }
-
-        public void ReduceSpeed(int speed)
-        {
-            Speed -= speed;
         }
     }
 }
