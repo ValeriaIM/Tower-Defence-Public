@@ -50,10 +50,5 @@ namespace Tower_Defence
         {
             map.StartGame();
         }
-
-        public void EndGame(Map map) // потом
-        {
-
-        }
     }
 }
