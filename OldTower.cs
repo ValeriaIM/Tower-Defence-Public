@@ -56,7 +56,7 @@ namespace Tower_Defence
                         {
                             if (map.Way[posi, posj] == '-')
                             { 
-                                map.EnemiesMap[posi, posj + q] = map.EnemiesMap[posi, posj];
+                                map.EnemiesMap[posi, posj + 1] = map.EnemiesMap[posi, posj];
                                 map.EnemiesMap[posi, posj] = null;
                                 posj++;
                             }
@@ -69,20 +69,42 @@ namespace Tower_Defence
                             step--;
                         }                        
                     }
-                } 
-                
-                for (int i = 0; i < height; i++)
-                {
-                    for (int j = 0; j < width; j++)
-                    {
-                        if (map.TowersMap[i, j] == null)
-                            continue;
-                        var radius = map.TowersMap[i, j].WatchRadius();
-                        // тут д.б. повреждение врагов
-                    }
-                } 
+                }                
+                RealizeInteractionOfTowersAndEnemies(height, width, map);
             }
-            
+        }
+        
+        private void RealizeInteractionOfTowersAndEnemies(int height, int width, Map map)
+        {
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    if (map.TowersMap[i, j] == null)
+                        continue;
+                    var radius = map.TowersMap[i, j].WatchRadius();
+                    for (int k = 0; k > radius; k++) 
+                    { 
+                        if (i - k > 0) 
+                            LineCheck(i - k, j, k, false, map);
+                        if (i + k < height) 
+                            LineCheck(i + k, j, k, false, map); 
+                        LineCheck(i - k, j, k, true, map); 
+                    }
+                }
+            }
+        }
+        
+        private void LineCheck(int i, int j, int k, bool isMedium, Map map)
+        {
+            if (j - k > 0)
+                if (map.EnemiesMap[i, j - k] != null)
+                    map.EnemiesMap[i, j - k].ReduceHP(map.TowersMap[i, j].Damage);
+            if (j + k < width)
+                if (map.EnemiesMap[i, j + k] != null)
+                    map.EnemiesMap[i, j + k].ReduceHP(map.TowersMap[i, j].Damage);
+            if ((!isMedium) and (map.EnemiesMap[i, j] != null))
+                map.EnemiesMap[i, j].ReduceHP(map.TowersMap[i, j].Damage);
         }
         
         private static string AddressWay1 = @"C:\...\way1.txt"; // тут какой-то путь
