@@ -1,114 +1,106 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp4
+namespace Tower_Defence
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-        }
-    }
+        private static string AddressWay1 = 
+            @"C:\Users\Ирина Заец\Documents\Visual Studio 2015\Projects\Tower Defence\Tower Defence\Maps\Map1.txt"; // тут какой-то путь
 
-    public class Tower
-    {
-        private int Price = 100;
-        public readonly int Damage;
-        public readonly int DamageRadius;
-        public readonly Point Position;
-
-        public Tower(int damage, int squre, int x, int y)
+        static void Main()
         {
-            Damage = damage;
-            DamageRadius = squre;
-            Position = new Point(x, y);
-            Player.Purse -= Price;
+            var way = Map.GetWay(AddressWay1); // потом можно создать файл со списком адресов распол-я карт, и в зависимости от ур-ня выбирать нужную карту
+            var map = new Map(20, 2, 500, way);
+            var pl = new Player(300);
+            var level = 1;
+
+            Console.WriteLine("                   Добро пожаловать в игру! ");
+            Console.WriteLine("Вам необходимо расставить башенки так, чтобы враги вас не убили.");
+            Console.WriteLine($"Ваш уровень - {level}.");
+
+            while (!map.GameMode)
+            {
+                DisplayCommandList();
+                //нужно сделать опцию просмотра карты у игрока,(не сейчас)можно также сделать уровни сложности (на легком можно троить во время игры)
+                //выход из игры+
+                string choice = null;
+                while (choice == null)
+                {
+                    choice = Console.ReadLine();
+                }
+                ProcessingChoice(pl, map, choice);
+            }
+            var waves = new Wave[0];
+            var game = new GameMode(map, pl, waves);
         }
         
-        public void DeleteTower()
+        private static void DisplayCommandList()
         {
-            Player.Purse += Price;// прекратить показывать картинку и прочее !!
-        }
-    }
-
-    public class Point
-    {
-        public readonly int X;
-        public readonly int Y;
-
-        public Point(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
-
-    public class Enemy
-    {
-        private int Damage;
-        private int Speed;
-        private int HP;
-        private int Value = 50; // после убийства игрок получает это количество(сделано)
-
-        public void ReduceHP(int damage)
-        {
-            HP -= damage;
-            if (HP == 0)
-                DeadEnemy();            
+            Console.WriteLine("Пожалуйста, выберите команду: ");
+            Console.WriteLine("1. Построить башню.");
+            Console.WriteLine("2. Перенести башню.");
+            Console.WriteLine("3. Удалить башню.");
+            Console.WriteLine("4. Посмотреть очки.");
+            Console.WriteLine("5. Начать игру.");
+            Console.WriteLine("P.S. Вы не потеряете очков во время редактирования, но на следующем уровне у вас уже не будет этих башен.");
+            Console.WriteLine("Будьте внимательны, после начала игры будет невозможно строить новые башни");
         }
 
-        public void ReduceSpeed(int speed)
+        private static void ProcessingChoice(Player pl, Map map, string choice)
         {
-            Speed -= speed;
-        }
-        
-        public void DeadEnemy()
-        {
-            Player.Purse += Value; // прекратить показывать и прочее!!!
-        }
-    }
-
-    public class Wave
-    {
-        public readonly Enemy Enemy1;
-        public readonly int QuantityEnemy1;
-        public readonly Enemy Enemy2;
-        public readonly int QuantityEnemy2;
-        public readonly Enemy Enemy3;
-        public readonly int QuantityEnemy3;
-        public readonly Enemy Enemy4;
-        public readonly int QuantityEnemy4;
-
-        public Wave(Enemy[] enemy, int[] quantityEnemy)
-        {
-            try
-            {            
-                Enemy1 = enemy[0];
-                Enemy2 = enemy[1];
-                Enemy3 = enemy[2];
-                Enemy4 = enemy[3];
-            }
-            catch (IndexOutOfRangeException e)
+            Point pos;
+            Point pos2;
+            switch (Int32.Parse(choice))
             {
-                Console.WriteLine("{0} exception with array of enemy caught.", e);
-            }
-            
-            try
-            {            
-                QuantityEnemy1 = quantityEnemy[0];
-                QuantityEnemy2 = quantityEnemy[1];
-                QuantityEnemy3 = quantityEnemy[2];
-                QuantityEnemy4 = quantityEnemy[3];
-            }
-            catch (IndexOutOfRangeException e)
-            {
-                Console.WriteLine("{0} exception with array of quantityEnemy caught.", e);
+                case 1:
+                    Console.WriteLine("Пожалуйста, выберите башню: ");
+                    Console.WriteLine("1. SimpleTower. Price = 100, Damage = 30, DamageRadius = 2.");
+                    string numberTower = null;
+                    while (numberTower == null)
+                    {
+                        numberTower = Console.ReadLine();
+                    }
+                    Console.WriteLine("Пожалуйста, напишите координаты через пробел");
+                    pos = ReceivePoint();
+                    pl.BuildTower(map, tower, pos);
+                    break;
+                case 2:
+                    Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
+                    pos = ReceivePoint();
+                    Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");
+                    pos2 = ReceivePoint();
+                    pl.MoveTower(map, pos, pos2);
+                    break;
+                case 3:
+                    Console.WriteLine("Пожалуйста, напишите координаты через пробел");
+                    pos = ReceivePoint();
+                    pl.DeleteTower(map, pos);
+                    break;
+                case 4:
+                    pl.WatchPowers(map);
+                    break;
+                case 5:
+                    pl.StartGame(map);
+                    break;
+                default:
+                    Console.WriteLine("Default case");
+                    break;
             }
         }
+
+        private static Point ReceivePoint()
+        {
+            string position = null;
+            while (position == null)
+            {
+                position = Console.ReadLine();
+            }
+            return new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
+        }
     }
-    
 }
