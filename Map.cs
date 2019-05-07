@@ -114,12 +114,12 @@ namespace Tower_Defence
             return way.ToArray();
         }
 
-        public bool InBounds(Point point)
+        public bool IsInBounds(Point point)
         {
             return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
         }
 
-        public bool InBounds(int x, int y)
+        public bool IsInBounds(int x, int y)
         {
             return x >= 0 && y >= 0 && x < Width && y < Height;
         }
