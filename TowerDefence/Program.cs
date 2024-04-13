@@ -91,8 +91,8 @@ namespace TowerDefence
             Console.WriteLine("3. Удалить башню.");
             Console.WriteLine("4. Посмотреть очки.");
             Console.WriteLine("5. Начать игру.");
-            Console.WriteLine("P.S. Вы не потеряете очков во время редактирования, но на следующем уровне у вас уже не будет этих башен.");
-            Console.WriteLine("Будьте внимательны, после начала игры будет невозможно строить новые башни");
+            Console.WriteLine("P.S. Вы не потеряете очков во время редактирования.");
+            Console.WriteLine("P.S. Будьте внимательны, после начала игры будет невозможно строить новые башни");
         }
 
         private static void ProcessingChoice(Player pl, Map map, string choice)
