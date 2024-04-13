@@ -12,3 +12,4 @@ C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\obj\Debug\net8.0\refint\To
 C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\obj\Debug\net8.0\TowerDefence.pdb
 C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\obj\Debug\net8.0\TowerDefence.genruntimeconfig.cache
 C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\obj\Debug\net8.0\ref\TowerDefence.dll
+C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\obj\Debug\net8.0\TowerDefence.sourcelink.json

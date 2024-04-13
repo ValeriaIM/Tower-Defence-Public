@@ -23,30 +23,33 @@ namespace TowerDefence
             
             Levels levels = new Levels();
             int result = 0;
-            Tower[,] towers = null;
+            Tower[,] oldTowers = null;
+            string oldAddr = "";
 
             foreach (Level l in levels.levels)
             {
                 int oldResult = result;
-                var resultTowers = ProcessLevel(l, oldResult, towers);
+                var resultTowers = ProcessLevel(l, oldResult, oldTowers, oldAddr);
                 result = resultTowers.Item1;
 
                 while (result == 0)
                 {
-                    resultTowers = ProcessLevel(l, oldResult, towers);
+                    resultTowers = ProcessLevel(l, oldResult, oldTowers, oldAddr);
                     result = resultTowers.Item1;
                     Console.WriteLine();
                 }
 
-                towers = resultTowers.Item2;
+                oldTowers = resultTowers.Item2;
+                oldAddr = resultTowers.Item3;
             }
         }
 
-        private static (int, Tower[,]) ProcessLevel(Level level, int oldPoints=0, Tower[,] oldTowers=null)
+        private static (int, Tower[,], string) ProcessLevel(Level level, int oldPoints=0, Tower[,] oldTowers=null, string oldAdrr="")
         {
             var way = Map.GetWay(level.address);            
             var pl = new Player(level.hp);
-            var map = createMap(way[0].Length, way.Length, level.points + oldPoints, way, oldTowers, oldTowers != null);
+            var map = createMap(way[0].Length, way.Length, level.points + oldPoints, way, oldTowers, 
+                oldTowers != null && level.address == oldAdrr);
             Console.WriteLine($"Ваш уровень - {level.level}.");
             Console.WriteLine();
             Console.WriteLine("Карта уровня");
@@ -68,12 +71,12 @@ namespace TowerDefence
             if (result)
             {
                 Console.WriteLine("Уровень пройден!");
-                return (map.PowersPlayer, map.TowersMap);
+                return (map.PowersPlayer, map.TowersMap, level.address);
             }
             else
             {
                 Console.WriteLine("Уровень не пройден...");
-                return (0, map.TowersMap);
+                return (0, map.TowersMap, level.address);
             }
         }
 

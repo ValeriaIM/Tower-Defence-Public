@@ -10,6 +10,8 @@ namespace TowerDefence
     {
         private static string AddressWay1 =
             @"C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\way1.txt";
+        private static string AddressWay2 =
+            @"C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\way2.txt";
 
         public HashSet<Level> levels { get; private set; }
         public Levels()
@@ -39,6 +41,12 @@ namespace TowerDefence
             enemies["easy-3"] = 2;
             waves = new Wave[] { new Wave(enemies) };
             levels.Add(new Level(3, AddressWay1, 200, 150, waves));
+
+            enemies["easy-1"] = 4;
+            enemies["easy-2"] = 0;
+            enemies["easy-3"] = 0;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(4, AddressWay2, 200, 100, waves));
         }
 
     }
