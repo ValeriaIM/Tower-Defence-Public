@@ -42,11 +42,47 @@ namespace TowerDefence
             waves = new Wave[] { new Wave(enemies) };
             levels.Add(new Level(3, AddressWay1, 200, 150, waves));
 
+            enemies["easy-1"] = 0;
+            enemies["easy-2"] = 8;
+            enemies["easy-3"] = 4;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(4, AddressWay1, 200, 150, waves));
+
+            enemies["easy-2"] = 0;
+            enemies["easy-3"] = 8;
+            enemies["medium-1"] = 4;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(5, AddressWay1, 200, 150, waves));
+
             enemies["easy-1"] = 4;
             enemies["easy-2"] = 0;
             enemies["easy-3"] = 0;
+            enemies["medium-1"] = 0;
             waves = new Wave[] { new Wave(enemies) };
-            levels.Add(new Level(4, AddressWay2, 200, 100, waves));
+            levels.Add(new Level(6, AddressWay2, 200, 200, waves));
+
+            enemies["easy-1"] = 6;
+            enemies["easy-2"] = 2;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(7, AddressWay2, 200, 150, waves));
+
+            enemies["easy-1"] = 8;
+            enemies["easy-2"] = 4;
+            enemies["easy-3"] = 2;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(8, AddressWay2, 200, 150, waves));
+
+            enemies["easy-1"] = 0;
+            enemies["easy-2"] = 8;
+            enemies["easy-3"] = 4;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(9, AddressWay2, 200, 150, waves));
+
+            enemies["easy-2"] = 0;
+            enemies["easy-3"] = 8;
+            enemies["medium-1"] = 4;
+            waves = new Wave[] { new Wave(enemies) };
+            levels.Add(new Level(10, AddressWay2, 200, 150, waves));
         }
 
     }
