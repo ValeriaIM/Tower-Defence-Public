@@ -198,9 +198,13 @@ namespace TowerDefence
                 for (int j = 0; j < Width; j++)
                 {
                     if (TowersMap[i, j] != null)
-                        Console.Write("S" + " ");
+                    {
+                        var typeTower = TowersMap[i, j].ImagePath;
+                        char sign = typeTower[typeTower.Length - 2];
+                        Console.Write(sign.ToString() + " ");
+                    }                        
                     else if (EnemiesMap[i, j] != null)
-                        Console.Write("W" + " ");
+                        Console.Write("V" + " ");
                     else Console.Write(WayMap[i, j] + " ");
                 }
                 Console.WriteLine();

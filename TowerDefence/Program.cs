@@ -108,9 +108,9 @@ namespace TowerDefence
                 case 1:
                     Console.WriteLine("Пожалуйста, выберите башню: ");
                     string[] typesTower = new[] { 
-                        "1. Type = SimpleTower. Price = 200. Damage = 10. DamageRadius = 2.",
-                        "2. Type = SmallTower. Price = 100. Damage = 10. DamageRadius = 1.",
-                        "3. Type = Tower. Price = 400. Damage = 15. DamageRadius = 2."
+                        "1. Type = Tower[T]. Price = 200. Damage = 10. DamageRadius = 2.",
+                        "2. Type = SmallTower[S]. Price = 100. Damage = 10. DamageRadius = 1.",
+                        "3. Type = MediumTower[M]. Price = 400. Damage = 15. DamageRadius = 2."
                     };
                     foreach (string typeTower in typesTower)
                     {
