@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -115,24 +116,40 @@ namespace TowerDefence
                     while (numberTower == null)
                     {
                         numberTower = Console.ReadLine();
+                        if (int.TryParse(numberTower, out int parsedNumber))
+                        {
+                            // Проверяем, лежит ли число в пределах допустимого диапазона
+                            if (parsedNumber < 1 || parsedNumber > typesTower.Length)
+                            {
+                                Console.WriteLine("Недопустимый номер башни");
+                                numberTower = null;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Должно быть одно число");
+                            numberTower = null;
+                        }
                     }
                     Tower tower = CreateTower(typesTower[int.Parse(numberTower) - 1]);
                     Console.WriteLine("Пожалуйста, напишите координаты через пробел");
-                    pos = ReceivePoint();
+                    Console.WriteLine("Первое число должно быть больше 0 и меньше " + map.Height.ToString());
+                    Console.WriteLine("Второе число должно быть больше 0 и меньше " + map.Width.ToString());
+                    pos = ReceivePoint(map.Height, map.Width);
                     pl.BuildTower(map, tower, pos);
                     map.WatchMap();
                     break;
                 case 2:
                     Console.WriteLine("Пожалуйста, напишите текущие координаты через пробел");
-                    pos = ReceivePoint();
+                    pos = ReceivePoint(map.Height, map.Width);
                     Console.WriteLine("Пожалуйста, напишите новые координаты через пробел");
-                    pos2 = ReceivePoint();
+                    pos2 = ReceivePoint(map.Height, map.Width);
                     pl.MoveTower(map, pos, pos2);
                     map.WatchMap();
                     break;                    
                 case 3:
                     Console.WriteLine("Пожалуйста, напишите координаты через пробел");
-                    pos = ReceivePoint();
+                    pos = ReceivePoint(map.Height, map.Width);
                     pl.DeleteTower(map, pos);
                     map.WatchMap();
                     break;
@@ -148,13 +165,37 @@ namespace TowerDefence
             }
         }
 
-        private static Point ReceivePoint()
+        private static Point ReceivePoint(int heigth, int width)
         {
             string position = null;
             while (position == null)
             {
                 position = Console.ReadLine();
+                var posSplit = position.Split();
+                if (posSplit.Length < 2) 
+                {
+                    Console.WriteLine("Введите два числа");
+                    position = null;
+                    continue;
+                }
+                if (!(int.TryParse(posSplit[0], out var h) && int.TryParse(posSplit[1], out var w)))
+                {
+                    Console.WriteLine("Введите два числа");
+                    position = null;
+                    continue;
+                }
+                else
+                {
+                    if ((h >= heigth) || (w >= width))
+                    {
+                        Console.WriteLine("Первое число должно быть больше 0 и меньше " + heigth.ToString());
+                        Console.WriteLine("Второе число должно быть больше 0 и меньше " + width.ToString());
+                        position = null;
+                        continue;
+                    }
+                }
             }
+
             return new Point(Int32.Parse(position.Split()[0]), Int32.Parse(position.Split()[1]));
         }
 

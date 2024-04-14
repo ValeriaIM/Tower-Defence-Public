@@ -12,12 +12,12 @@ namespace TowerDefence
 
         public static Dictionary<string, Enemy> EnemiesTypes = new Dictionary<string, Enemy>()
         {
-            {"easy-1", new Enemy(50, 50, 25) },
-            {"easy-2", new Enemy(70, 70, 30) },
-            {"easy-3", new Enemy(90, 80, 35) },
-            {"medium-1", new Enemy(90, 90, 40) },
-            {"medium-2", new Enemy(110, 100, 45) },
-            {"medium-3", new Enemy(130, 110, 50) },
+            {"easy-1", new Enemy(50, 50, 15) },
+            {"easy-2", new Enemy(80, 70, 20) },
+            {"easy-3", new Enemy(110, 80, 25) },
+            {"medium-1", new Enemy(120, 90, 30) },
+            {"medium-2", new Enemy(140, 100, 35) },
+            {"medium-3", new Enemy(150, 110, 40) },
         };
 
         public Wave(Dictionary<string, int> countEnemies)
