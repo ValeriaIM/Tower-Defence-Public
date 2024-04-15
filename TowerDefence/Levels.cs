@@ -9,9 +9,9 @@ namespace TowerDefence
     internal class Levels
     {
         private static string AddressWay1 =
-            @"C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\way1.txt";
+            @"..\..\..\way1.txt";
         private static string AddressWay2 =
-            @"C:\Users\mir_s\source\repos\TowerDefence\TowerDefence\way2.txt";
+            @"..\..\..\way2.txt";
 
         public HashSet<Level> levels { get; private set; }
         public Levels()
